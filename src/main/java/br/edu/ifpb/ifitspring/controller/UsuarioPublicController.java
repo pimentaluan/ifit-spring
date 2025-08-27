@@ -2,19 +2,27 @@ package br.edu.ifpb.ifitspring.controller;
 
 import br.edu.ifpb.ifitspring.model.Usuario;
 import br.edu.ifpb.ifitspring.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/auth") // <<<<<< DESAMBIGUA AS ROTAS
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class UsuarioPublicController {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository repo;
+    private final PasswordEncoder encoder;
 
-    @PostMapping
-    public Usuario criar(@RequestBody Usuario usuario) {
-        return usuarioRepository.save(usuario);
+    @PostMapping("/usuarios") // vira POST /auth/usuarios (ou troque para "/signup")
+    public Usuario criar(@RequestBody Usuario u) {
+        if (u.getSenha() != null && !u.getSenha().isBlank()) {
+            u.setSenha(encoder.encode(u.getSenha()));
+        }
+        if (u.getRole() == null || u.getRole().isBlank()) {
+            u.setRole("ROLE_USER");
+        }
+        return repo.save(u);
     }
 }

@@ -1,55 +1,34 @@
+// src/main/java/br/edu/ifpb/ifitspring/model/Usuario.java
 package br.edu.ifpb.ifitspring.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 import jakarta.persistence.*;
+import lombok.*;
 
-import br.edu.ifpb.ifitspring.enums.Role;
-
-@Entity
+@Entity @Table(name="usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 public class Usuario {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
+
+    @Column(nullable=false)
     private String email;
-    private String senha;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(nullable=false)
+    private String senha; // BCrypt
 
-    public Long getId() {
-        return id;
-    }
+    private String objetivo;
+    private Integer idade;
+    private Integer frequencia;
+    private String nivel;
+    private String lesao;
+    private String local;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(columnDefinition = "TEXT")
+    private String treinoJson;
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public Role getRole() {
-        return role;
-    }
+    // "ROLE_USER" ou "ROLE_ADMIN"
+    @Column(nullable=false)
+    private String role;
 }
