@@ -1,34 +1,67 @@
-// src/main/java/br/edu/ifpb/ifitspring/model/Usuario.java
 package br.edu.ifpb.ifitspring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
 
-@Entity @Table(name="usuarios", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity @Table(name = "usuarios")
 public class Usuario {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nome;
-
-    @Column(nullable=false)
     private String email;
-
-    @Column(nullable=false)
-    private String senha; // BCrypt
-
-    private String objetivo;
     private Integer idade;
-    private Integer frequencia;
-    private String nivel;
-    private String lesao;
-    private String local;
 
-    @Column(columnDefinition = "TEXT")
-    private String treinoJson;
 
-    // "ROLE_USER" ou "ROLE_ADMIN"
-    @Column(nullable=false)
-    private String role;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Treino> treinos = new ArrayList<>();
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+    public List<Treino> getTreinos() {
+        return treinos;
+    }
+
+    public void setTreinos(List<Treino> treinos) {
+        this.treinos = treinos;
+    }
+
 }
+

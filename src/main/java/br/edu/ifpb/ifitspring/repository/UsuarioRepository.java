@@ -1,4 +1,3 @@
-// src/main/java/br/edu/ifpb/ifitspring/repository/UsuarioRepository.java
 package br.edu.ifpb.ifitspring.repository;
 
 import br.edu.ifpb.ifitspring.model.Usuario;
@@ -8,6 +7,4 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmail(String email);
-    boolean existsByEmail(String email);
 }
-
